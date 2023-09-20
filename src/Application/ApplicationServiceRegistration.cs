@@ -1,4 +1,7 @@
-﻿using Application.Common.Rules;
+﻿using Application.Common.Pipelines.Transaction;
+using Application.Common.Pipelines.Validation;
+using Application.Common.Rules;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -12,9 +15,14 @@ public static class ApplicationServiceRegistration
 
         services.AddSubClassesOfType(Assembly.GetExecutingAssembly(), typeof(BaseBusinessRules));
 
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+            configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
+            configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
         });
 
         return services;

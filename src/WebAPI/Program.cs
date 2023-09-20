@@ -23,7 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (app.Environment.IsProduction()) //Productiona Geçince Devreye Sok Development Ortamýnda Devreye Sokmuyoruz.
+//if (app.Environment.IsProduction()) //Productiona Geçince Devreye Sok Development Ortamýnda Devreye Sokmuyoruz.
     app.ConfigureCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();

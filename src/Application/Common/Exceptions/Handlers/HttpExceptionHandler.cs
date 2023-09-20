@@ -2,6 +2,7 @@
 using Application.Common.Exceptions.HttpProblemDetails;
 using Application.Common.Exceptions.Types;
 using Microsoft.AspNetCore.Http;
+using ValidationProblemDetails = Application.Common.Exceptions.HttpProblemDetails.ValidationProblemDetails;
 
 namespace Application.Common.Exceptions.Handlers;
 
@@ -27,6 +28,14 @@ public sealed class HttpExceptionHandler : ExceptionHandler
     {
         Response.StatusCode = StatusCodes.Status500InternalServerError;
         string details = new InternalServerErrorProblemDetails(exception.Message).AsJson();
+        return Response.WriteAsync(details);
+    }
+
+    protected override Task HandlerException(ValidationException validationException)
+    {
+
+        Response.StatusCode = StatusCodes.Status400BadRequest;
+        string details = new ValidationProblemDetails(validationException.Errors).AsJson();
         return Response.WriteAsync(details);
     }
 }

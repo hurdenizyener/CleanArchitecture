@@ -21,7 +21,7 @@ public sealed class ProductBusinessRules : BaseBusinessRules
 
         if (result != null)
         {
-            throw new BusinessException(ProductMessages.ProductNameExists);
+            throw new BusinessException(ProductBusinessExceptionMessages.ProductNameExists);
 
         }
     }

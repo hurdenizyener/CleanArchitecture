@@ -8,10 +8,12 @@ public abstract class ExceptionHandler
         exception switch
         {
             BusinessException businessException => HandlerException(businessException),
+            ValidationException validationException => HandlerException(validationException),
             _ => HandlerException(exception)//Hiçbiri İse
         };
 
     protected abstract Task HandlerException(BusinessException businessException);
+    protected abstract Task HandlerException(ValidationException validationException);
     protected abstract Task HandlerException(Exception exception);
 
 }

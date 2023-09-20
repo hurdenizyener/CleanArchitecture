@@ -1,4 +1,5 @@
-﻿using Application.Features.Products.Rules;
+﻿using Application.Common.Pipelines.Transaction;
+using Application.Features.Products.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
 using Domain.Entities;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace Application.Features.Products.Commands.Create;
 
-public sealed class CreateProductCommand : IRequest<CreatedProductResponse>
+public sealed class CreateProductCommand : IRequest<CreatedProductResponse>, ITransactionalRequest //Transaction İşlemlerinde Koy
 {
     public Guid CategoryId { get; set; }
     public string ProductName { get; set; }
