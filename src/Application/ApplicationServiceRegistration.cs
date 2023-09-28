@@ -1,4 +1,8 @@
-﻿using Application.Common.Pipelines.Transaction;
+﻿using Application.Common.Logging.Serilog;
+using Application.Common.Logging.Serilog.Loggers;
+using Application.Common.Pipelines.Caching;
+using Application.Common.Pipelines.Logging;
+using Application.Common.Pipelines.Transaction;
 using Application.Common.Pipelines.Validation;
 using Application.Common.Rules;
 using FluentValidation;
@@ -23,7 +27,12 @@ public static class ApplicationServiceRegistration
 
             configuration.AddOpenBehavior(typeof(RequestValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(TransactionScopeBehavior<,>));
+            configuration.AddOpenBehavior(typeof(CachingBehavior<,>));
+            configuration.AddOpenBehavior(typeof(CacheRemovingBehavior<,>));
+            configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
+
+        services.AddSingleton<LoggerServiceBase, FileLogger>();
 
         return services;
     }

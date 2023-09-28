@@ -16,7 +16,9 @@ public sealed class MappingProfiles : Profile
     public MappingProfiles()
     {
         CreateMap<Product, CreateProductCommand>().ReverseMap();
-        CreateMap<Product, CreatedProductResponse>().ReverseMap();
+        CreateMap<Product, CreatedProductResponse>()
+            .ForMember(destinationMember: p => p.ProductId, memberOptions: opt => opt.MapFrom(p => p.Id))
+            .ReverseMap();
 
         CreateMap<Product, UpdateProductCommand>().ReverseMap();
         CreateMap<Product, UpdatedProductResponse>().ReverseMap();

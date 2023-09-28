@@ -1,16 +1,23 @@
-﻿using Application.Services.Repositories;
+﻿using Application.Common.Pipelines.Caching;
+using Application.Services.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Products.Commands.Update;
 
-public sealed class UpdateProductCommand : IRequest<UpdatedProductResponse>
+public sealed class UpdateProductCommand : IRequest<UpdatedProductResponse>,ICacheRemoverRequest
 {
     public Guid Id { get; set; }
     public string ProductName { get; set; }
     public short UnitsInStock { get; set; }
     public Decimal UnitPrice { get; set; }
+
+    public string? CacheKey => "";
+
+    public bool Bypass => false;
+
+    public string? CacheGroupKey => "GetProducts";
 
     public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdatedProductResponse>
     {

@@ -1,4 +1,6 @@
 ﻿using Application.Common.Pagination;
+using Application.Common.Pipelines.Caching;
+using Application.Common.Pipelines.Logging;
 using Application.Common.Requests;
 using Application.Common.Responses;
 using Application.Services.Repositories;
@@ -9,9 +11,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Products.Queries.GetList;
 
-public sealed class GetListProductQuery : IRequest<GetListResponse<GetListProductListItemDto>>
+public sealed class GetListProductQuery : IRequest<GetListResponse<GetListProductListItemDto>>, ICachableRequest, ILoggableRequest
 {
     public PageRequest PageRequest { get; set; }
+
+    public string CacheKey => $"GetListProductQuery({PageRequest.PageIndex},{PageRequest.PageSize})";
+
+    public bool Bypass { get; }
+
+    public TimeSpan? SlidingExpiration { get; }
+
+    public string? CacheGroupKey => "GetProducts";
 
     public sealed class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, GetListResponse<GetListProductListItemDto>>
     {

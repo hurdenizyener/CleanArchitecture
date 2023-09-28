@@ -1,4 +1,6 @@
-﻿using Application.Common.Pipelines.Transaction;
+﻿using Application.Common.Pipelines.Caching;
+using Application.Common.Pipelines.Logging;
+using Application.Common.Pipelines.Transaction;
 using Application.Features.Products.Rules;
 using Application.Services.Repositories;
 using AutoMapper;
@@ -7,12 +9,18 @@ using MediatR;
 
 namespace Application.Features.Products.Commands.Create;
 
-public sealed class CreateProductCommand : IRequest<CreatedProductResponse>, ITransactionalRequest //Transaction İşlemlerinde Koy
+public sealed class CreateProductCommand : IRequest<CreatedProductResponse>, ICacheRemoverRequest, ILoggableRequest
 {
     public Guid CategoryId { get; set; }
     public string ProductName { get; set; }
     public short UnitsInStock { get; set; }
     public Decimal UnitPrice { get; set; }
+
+    public string? CacheKey => "";
+
+    public bool Bypass => false;
+
+    public string? CacheGroupKey => "GetProducts";
 
     public sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, CreatedProductResponse>
     {
@@ -26,6 +34,8 @@ public sealed class CreateProductCommand : IRequest<CreatedProductResponse>, ITr
             _mapper = mapper;
             _productBusinessRules = productBusinessRules;
         }
+
+
 
         public async Task<CreatedProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
